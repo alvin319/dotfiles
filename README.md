@@ -35,6 +35,9 @@ Anything private or per-machine lives in `~/.zshrc.local`, which `~/.zshrc`
 sources if it exists: private package indexes, ssh aliases to work boxes,
 tokens. The repo only ships the example template.
 
+Same idea for git: `~/.gitconfig.local` (included last by `git/gitconfig`) overrides the
+committed identity, e.g. a work email on work machines.
+
 Also kept out of the repo on purpose: `~/.claude/settings.json` (holds an API
 key), shell history, `gh` credentials.
 

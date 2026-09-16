@@ -1,6 +1,6 @@
 [user]
 	name = Alvin Deng
-	email = alvin@preferencemodel.com
+	email = alvin319@gmail.com
 [core]
 	pager = less -R --mouse
 [init]
@@ -11,3 +11,6 @@
 	helper = cache --timeout=86400
 [credential "https://github.com"]
 	helper = !gh auth git-credential
+# Machine-local overrides (work email, signing keys, ...). Not tracked. Must stay last so it wins.
+[include]
+	path = ~/.gitconfig.local
