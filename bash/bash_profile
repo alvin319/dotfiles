@@ -1,0 +1,5 @@
+[ -f ~/.bashrc ] && . ~/.bashrc
+# Rebuild-proof zsh handoff (template may rewrite .bashrc as root)
+if [[ $- == *i* ]] && [ -t 1 ] && [ -x /usr/bin/zsh ] && [ -z "$ZSH_VERSION" ]; then
+  exec /usr/bin/zsh -l
+fi

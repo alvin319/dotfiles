@@ -1,0 +1,4 @@
+# Read by every zsh (including non-interactive `zsh -c`), unlike .zshrc.
+# Keeps PATH correct for tools that run zsh non-interactively (e.g. Claude Code).
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+[ -d /opt/homebrew/bin ] && export PATH="/opt/homebrew/bin:$PATH"

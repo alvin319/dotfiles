@@ -1,0 +1,13 @@
+[user]
+	name = Alvin Deng
+	email = alvin@preferencemodel.com
+[core]
+	pager = less -R --mouse
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+[credential]
+	helper = cache --timeout=86400
+[credential "https://github.com"]
+	helper = !gh auth git-credential

@@ -1,0 +1,12 @@
+# ~/.zshrc.local — machine-specific and work-specific settings.
+# Sourced by ~/.zshrc if present. NOT tracked in the dotfiles repo.
+# Copy this file to ~/.zshrc.local and fill in what applies to this machine.
+
+# Private package index (uv)
+# export UV_INDEX="name=https://oauth2accesstoken@REGION-python.pkg.dev/PROJECT/REPO/simple/"
+# export UV_KEYRING_PROVIDER="subprocess"
+
+# ssh shortcuts to remote boxes
+# alias remotecoder="ssh coder.my-box"
+
+# Anything else that should not be public: tokens, internal hostnames, etc.
