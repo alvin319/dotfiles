@@ -7,6 +7,7 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OS="$(uname -s)"
 BACKUP="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 NODE_VERSION="v24.20.0"
+export PATH="$HOME/.local/bin:$PATH"   # so `have claude`/`have uv` see native installs
 
 say()  { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 have() { command -v "$1" >/dev/null 2>&1; }
