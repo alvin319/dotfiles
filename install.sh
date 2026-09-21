@@ -109,6 +109,7 @@ say "Next steps"
 cat <<MSG
   - exec zsh                      (or open a new terminal)
   - edit ~/.zshrc.local           private indexes, ssh aliases
+  - edit ~/.gitconfig.local       work email override (optional)
   - gh auth login                 if this machine needs GitHub
   - macOS: pick the "Dotfiles" iTerm2 profile as default if doctor.sh warned about it
 MSG

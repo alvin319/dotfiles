@@ -1,84 +1,86 @@
 # dotfiles
 
-Shell setup shared across a MacBook and several Ubuntu boxes (Coder workspaces).
-One `zshrc` for every machine; the few OS-specific lines branch on `$OSTYPE`.
+One shell setup for a MacBook and a fleet of Ubuntu boxes (Coder workspaces).
+A single `zshrc` serves every machine; the few OS-specific lines branch on `$OSTYPE`.
+Everything is symlinked from this repo, so `git pull` is the update mechanism.
 
 ## Install
+
+Prerequisites: macOS needs [Homebrew](https://brew.sh); Ubuntu needs `sudo`.
 
 ```bash
 git clone https://github.com/alvin319/dotfiles ~/dotfiles && ~/dotfiles/install.sh
 ```
 
-`install.sh` is idempotent. It installs packages (brew or apt), clones the
-external pieces, symlinks the files below into `~`, and installs node + Claude
-Code on Linux. Existing real files are moved to `~/.dotfiles-backup-<timestamp>/`.
+`install.sh` is idempotent and safe to re-run. It:
 
-## What's inside
+1. installs packages (`brew` or `apt`): zsh, tmux, fzf deps, ripgrep, fd, bat, tree, gh; iTerm2 on macOS; nvtop on GPU boxes
+2. clones oh-my-zsh, powerlevel10k, fzf, fzf-tab, fzf-git, amix/vimrc
+3. symlinks the files in the table below into `~` (existing real files go to `~/.dotfiles-backup-<timestamp>/`)
+4. on macOS, installs the MesloLGS NF font and the iTerm2 profile
+5. installs node (Linux), Claude Code, and uv if missing
+6. runs `doctor.sh`
 
-| Path | Installed as | Notes |
+Then, once per machine:
+
+- `exec zsh`
+- fill in `~/.zshrc.local` (created from the template) and `~/.gitconfig.local`; see below
+- `gh auth login` if the machine needs GitHub
+- macOS: if iTerm2 was running during install, set the default profile by hand:
+  Settings > Profiles > Dotfiles > Other Actions… > Set as Default
+
+Not handled by the installer, by design: `~/.claude/settings.json` (has an API key),
+`uv tool install` of project tools, shell history.
+
+## Files
+
+| Repo path | Installed as | What |
 |---|---|---|
-| `zsh/zshrc` | `~/.zshrc` | oh-my-zsh + powerlevel10k, fzf + fzf-tab + fzf-git, autosuggestions, syntax highlighting |
-| `zsh/zshenv` | `~/.zshenv` | PATH for non-interactive zsh (Claude Code and friends) |
-| `zsh/p10k.zsh` | `~/.p10k.zsh` | prompt, `nerdfont-v3` mode |
-| `zsh/zshrc.local.example` | copied to `~/.zshrc.local` once | machine/work-specific settings, **not tracked** |
-| `tmux/tmux.conf` | `~/.tmux.conf` | mouse, 50k scrollback, true color, popups for fzf |
-| `git/gitconfig` | `~/.gitconfig` | identity, mouse pager, `gh` credential helper |
-| `vim/vimrc`, `vim/my_configs.vim` | `~/.vimrc`, `~/.vim_runtime/my_configs.vim` | [amix/vimrc](https://github.com/amix/vimrc) runtime is cloned, not vendored |
-| `bash/bash_profile` | `~/.bash_profile` (Linux only) | hands a bash login shell to zsh; Coder resets the login shell on restart |
-| `iterm2/Dotfiles.json` | `~/Library/Application Support/iTerm2/DynamicProfiles/` (macOS only) | colors, font, mouse reporting, Option=Esc+ |
-| `doctor.sh` | — | post-install checks; non-zero exit on failures |
+| `zsh/zshrc` | `~/.zshrc` | oh-my-zsh, powerlevel10k, fzf + fzf-tab + fzf-git, autosuggestions, syntax highlighting |
+| `zsh/zshenv` | `~/.zshenv` | PATH for non-interactive zsh (tools that run `zsh -c`) |
+| `zsh/p10k.zsh` | `~/.p10k.zsh` | prompt config, `nerdfont-v3` glyphs |
+| `zsh/zshrc.local.example` | copied once to `~/.zshrc.local` | template for machine-local settings |
+| `tmux/tmux.conf` | `~/.tmux.conf` | mouse, 50k scrollback, true color, windows from 1, popups |
+| `git/gitconfig` | `~/.gitconfig` | identity, mouse-scrollable pager, `gh` credential helper, includes `~/.gitconfig.local` |
+| `vim/vimrc`, `vim/my_configs.vim` | `~/.vimrc`, `~/.vim_runtime/my_configs.vim` | glue for the cloned [amix/vimrc](https://github.com/amix/vimrc) runtime |
+| `bash/bash_profile` | `~/.bash_profile` (Linux) | hands a bash login shell to zsh; Coder resets the login shell on restart |
+| `iterm2/Dotfiles.json` | iTerm2 `DynamicProfiles/` (macOS) | colors, font, unlimited scrollback, mouse reporting, Option = Esc+ |
+| `iterm2/export-profile.py` | — | re-export a regular iTerm2 profile into `Dotfiles.json` |
+| `doctor.sh` | — | post-install checks; exit code = number of failures |
 
-External pieces cloned by the installer: oh-my-zsh, powerlevel10k, fzf, fzf-tab,
-fzf-git.sh, amix/vimrc.
+## Machine-local settings (not tracked)
 
-## Machine-local settings
+- `~/.zshrc.local`, sourced by `~/.zshrc`: private package indexes, ssh aliases, tokens.
+- `~/.gitconfig.local`, included last by `~/.gitconfig`: overrides identity, e.g. a work email.
 
-Anything private or per-machine lives in `~/.zshrc.local`, which `~/.zshrc`
-sources if it exists: private package indexes, ssh aliases to work boxes,
-tokens. The repo only ships the example template.
+The repo is public. Anything that names an employer, a host, or a credential belongs in these files.
 
-Same idea for git: `~/.gitconfig.local` (included last by `git/gitconfig`) overrides the
-committed identity, e.g. a work email on work machines.
-
-Also kept out of the repo on purpose: `~/.claude/settings.json` (holds an API
-key), shell history, `gh` credentials.
-
-## Keybindings worth remembering
+## Keybindings
 
 | Keys | What |
 |---|---|
 | `ctrl-r` | fuzzy history |
-| `ctrl-t` | fuzzy file picker with `bat` preview |
-| `alt-c` | fuzzy `cd` with `tree` preview |
-| `tab` | fzf-tab fuzzy completion; `<` `>` switch groups |
+| `ctrl-t` | fuzzy file picker, `bat` preview |
+| `alt-c` | fuzzy `cd`, `tree` preview |
+| `tab` | fzf-tab completion; `<` `>` switch groups |
 | `ctrl-g` then `ctrl-b/f/h/t/r/s/l/w/e` | fzf-git: branches, files, hashes, tags, remotes, stashes, reflog, worktrees, refs |
-| `prefix r` (tmux) | reload tmux.conf |
+| `prefix r` (tmux) | reload `tmux.conf` |
 
-Inside tmux all fzf pickers open as a centered popup.
+Inside tmux, every fzf picker opens as a centered popup.
 
-## macOS terminal (iTerm2)
+## macOS terminal
 
-Two things used to get lost on a fresh Mac, and `install.sh` now handles both:
+Two things a fresh Mac lacks, both handled by `install.sh`:
 
-- **Font.** powerlevel10k is configured for `nerdfont-v3` glyphs. Without the
-  **MesloLGS NF** font the prompt renders as random characters. The installer
-  downloads the four styles into `~/Library/Fonts`.
-- **Profile.** `iterm2/Dotfiles.json` is an iTerm2 *dynamic profile* holding the
-  color scheme, font, unlimited scrollback, mouse reporting (tmux/vim mouse), and
-  left Option = Esc+ (alt-c, Meta bindings). The installer symlinks it into
-  `~/Library/Application Support/iTerm2/DynamicProfiles/`, and iTerm2 loads it
-  live. It also sets it as the default profile when iTerm2 isn't running;
-  otherwise do it once by hand: Settings > Profiles > Dotfiles > Other Actions… >
-  Set as Default.
+- **Font.** powerlevel10k needs **MesloLGS NF**; without it the prompt renders as random characters.
+- **iTerm2 profile.** `iterm2/Dotfiles.json` is a dynamic profile symlinked into iTerm2, which loads it live.
+  Edits made in iTerm2 Settings are written back to the JSON, i.e. into the repo, so color tweaks are a commit away.
 
-Editing the Dotfiles profile inside iTerm2 writes back into the JSON, which is
-the repo file, so color tweaks are a `git commit` away. `iterm2/export-profile.py`
-re-exports a regular profile into that file if you ever start from one again.
+## Updating
 
-`doctor.sh` (run by the installer, or on its own) checks the font, the profile
-link, the default profile, the symlinks, and that every zsh plugin actually loads.
+Edit files here, commit, push. On every other machine: `git -C ~/dotfiles pull`.
+Run `~/dotfiles/doctor.sh` on any machine that looks off.
 
 ## After a Coder workspace restart
 
-Root-level packages are wiped; `~` survives. Re-run `~/dotfiles/install.sh`
-(or just the apt line inside it) and `gh auth login`.
+Root-level packages are wiped, `~` survives. Re-run `~/dotfiles/install.sh`, then `gh auth login`.
