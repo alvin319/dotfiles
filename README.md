@@ -17,7 +17,7 @@ git clone https://github.com/alvin319/dotfiles ~/dotfiles && ~/dotfiles/install.
 1. installs packages (`brew` or `apt`): zsh, tmux, fzf deps, ripgrep, fd, bat, tree, gh; iTerm2 on macOS; nvtop on GPU boxes
 2. clones oh-my-zsh, powerlevel10k, fzf, fzf-tab, fzf-git, amix/vimrc
 3. symlinks the files in the table below into `~` (existing real files go to `~/.dotfiles-backup-<timestamp>/`)
-4. on macOS, installs the MesloLGS NF font and the iTerm2 profile
+4. on macOS, installs the MesloLGS NF font, the iTerm2 profile, and the Ayu Mirage color preset
 5. installs node (Linux), Claude Code, and uv if missing
 6. runs `doctor.sh`
 
@@ -26,8 +26,10 @@ Then, once per machine:
 - `exec zsh`
 - fill in `~/.zshrc.local` (created from the template) and `~/.gitconfig.local`; see below
 - `gh auth login` if the machine needs GitHub
-- macOS: if iTerm2 was running during install, set the default profile by hand:
-  Settings > Profiles > Dotfiles > Other Actions… > Set as Default
+- macOS: if iTerm2 was running during install, two clicks the installer couldn't do
+  (`doctor.sh` warns until they're done):
+  Settings > Profiles > Dotfiles > Other Actions… > Set as Default, and
+  Settings > Profiles > Colors > Color Presets… > Import… > `iterm2/Ayu Mirage.itermcolors`
 
 Not handled by the installer, by design: `~/.claude/settings.json` (has an API key),
 `uv tool install` of project tools, shell history.
