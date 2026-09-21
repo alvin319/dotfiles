@@ -4,6 +4,7 @@
 # Exit code: number of FAILs (WARNs don't count).
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OS="$(uname -s)"
+export PATH="$HOME/.local/bin:$HOME/.fzf/bin:/opt/homebrew/bin:$PATH"   # what an interactive shell would have
 fails=0
 ok()   { printf '  \033[32mPASS\033[0m  %s\n' "$*"; }
 warn() { printf '  \033[33mWARN\033[0m  %s\n' "$*"; }
