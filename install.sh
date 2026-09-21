@@ -17,6 +17,7 @@ say "Packages"
 if [[ $OS == Darwin ]]; then
   have brew || { echo "Homebrew missing: https://brew.sh"; exit 1; }
   brew install zsh-autosuggestions zsh-syntax-highlighting ripgrep fd bat tree tmux gh
+  [ -d /Applications/iTerm.app ] || brew install --cask iterm2
 else
   sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
   sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
@@ -61,6 +62,34 @@ link vim/my_configs.vim "$HOME/.vim_runtime/my_configs.vim"
 
 [ -f "$HOME/.zshrc.local" ] || { cp "$DOTFILES/zsh/zshrc.local.example" "$HOME/.zshrc.local"; echo "  created ~/.zshrc.local from template — edit it"; }
 
+# ---- 3b. macOS terminal: font + iTerm2 profile --------------------------------
+# powerlevel10k is configured for nerdfont-v3 glyphs. Without this font the prompt
+# renders as random characters and `p10k configure` has to be re-run.
+ITERM_PROFILE_GUID="D07F11E5-0000-4000-8000-A1B1C1D1E1F1"   # Guid inside iterm2/Dotfiles.json
+if [[ $OS == Darwin ]]; then
+  say "MesloLGS NF font (powerlevel10k glyphs)"
+  for style in Regular Bold Italic "Bold Italic"; do
+    dst="$HOME/Library/Fonts/MesloLGS NF $style.ttf"
+    if [ ! -f "$dst" ]; then
+      curl -fsSL "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20${style// /%20}.ttf" -o "$dst"
+      echo "  installed $dst"
+    fi
+  done
+
+  say "iTerm2 profile (colors, font, mouse reporting, Option=Esc+)"
+  DP="$HOME/Library/Application Support/iTerm2/DynamicProfiles"; mkdir -p "$DP"
+  link iterm2/Dotfiles.json "$DP/Dotfiles.json"
+  # iTerm2 picks up dynamic profiles live. Making it the *default* profile needs a
+  # prefs write, which only sticks when iTerm2 is not running (it rewrites prefs on quit).
+  if pgrep -xq iTerm2; then
+    echo "  iTerm2 is running: set the default by hand once —"
+    echo "    iTerm2 > Settings > Profiles > Dotfiles > Other Actions… > Set as Default"
+  else
+    defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "$ITERM_PROFILE_GUID"
+    echo "  set Dotfiles as the default iTerm2 profile"
+  fi
+fi
+
 # ---- 4. runtimes (Linux; on macOS use brew) ----------------------------------
 if [[ $OS == Linux ]]; then
   say "node $NODE_VERSION + Claude Code"
@@ -74,11 +103,12 @@ have claude || curl -fsSL https://claude.ai/install.sh | bash
 have uv     || curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # ---- 5. done -----------------------------------------------------------------
-say "Done. Next steps"
+"$DOTFILES/doctor.sh" || true
+
+say "Next steps"
 cat <<MSG
   - exec zsh                      (or open a new terminal)
   - edit ~/.zshrc.local           private indexes, ssh aliases
   - gh auth login                 if this machine needs GitHub
-  - terminal font: MesloLGS NF    (p10k uses nerdfont-v3 glyphs)
-  - iTerm2: Profiles > Terminal > Enable mouse reporting; Profiles > Keys > Left Option = Esc+
+  - macOS: pick the "Dotfiles" iTerm2 profile as default if doctor.sh warned about it
 MSG

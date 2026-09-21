@@ -25,6 +25,8 @@ Code on Linux. Existing real files are moved to `~/.dotfiles-backup-<timestamp>/
 | `git/gitconfig` | `~/.gitconfig` | identity, mouse pager, `gh` credential helper |
 | `vim/vimrc`, `vim/my_configs.vim` | `~/.vimrc`, `~/.vim_runtime/my_configs.vim` | [amix/vimrc](https://github.com/amix/vimrc) runtime is cloned, not vendored |
 | `bash/bash_profile` | `~/.bash_profile` (Linux only) | hands a bash login shell to zsh; Coder resets the login shell on restart |
+| `iterm2/Dotfiles.json` | `~/Library/Application Support/iTerm2/DynamicProfiles/` (macOS only) | colors, font, mouse reporting, Option=Esc+ |
+| `doctor.sh` | — | post-install checks; non-zero exit on failures |
 
 External pieces cloned by the installer: oh-my-zsh, powerlevel10k, fzf, fzf-tab,
 fzf-git.sh, amix/vimrc.
@@ -54,10 +56,27 @@ key), shell history, `gh` credentials.
 
 Inside tmux all fzf pickers open as a centered popup.
 
-## Terminal
+## macOS terminal (iTerm2)
 
-- Font: **MesloLGS NF** (p10k glyphs).
-- iTerm2: enable mouse reporting (tmux/vim mouse), left Option key = Esc+ (alt-c, Meta bindings).
+Two things used to get lost on a fresh Mac, and `install.sh` now handles both:
+
+- **Font.** powerlevel10k is configured for `nerdfont-v3` glyphs. Without the
+  **MesloLGS NF** font the prompt renders as random characters. The installer
+  downloads the four styles into `~/Library/Fonts`.
+- **Profile.** `iterm2/Dotfiles.json` is an iTerm2 *dynamic profile* holding the
+  color scheme, font, unlimited scrollback, mouse reporting (tmux/vim mouse), and
+  left Option = Esc+ (alt-c, Meta bindings). The installer symlinks it into
+  `~/Library/Application Support/iTerm2/DynamicProfiles/`, and iTerm2 loads it
+  live. It also sets it as the default profile when iTerm2 isn't running;
+  otherwise do it once by hand: Settings > Profiles > Dotfiles > Other Actions… >
+  Set as Default.
+
+Editing the Dotfiles profile inside iTerm2 writes back into the JSON, which is
+the repo file, so color tweaks are a `git commit` away. `iterm2/export-profile.py`
+re-exports a regular profile into that file if you ever start from one again.
+
+`doctor.sh` (run by the installer, or on its own) checks the font, the profile
+link, the default profile, the symlinks, and that every zsh plugin actually loads.
 
 ## After a Coder workspace restart
 
