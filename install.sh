@@ -81,12 +81,16 @@ if [[ $OS == Darwin ]]; then
   link iterm2/Dotfiles.json "$DP/Dotfiles.json"
   # iTerm2 picks up dynamic profiles live. Making it the *default* profile needs a
   # prefs write, which only sticks when iTerm2 is not running (it rewrites prefs on quit).
+  # The profile already carries the Ayu Mirage colors; registering the preset too
+  # keeps it selectable in Settings > Colors > Color Presets.
   if pgrep -xq iTerm2; then
-    echo "  iTerm2 is running: set the default by hand once —"
-    echo "    iTerm2 > Settings > Profiles > Dotfiles > Other Actions… > Set as Default"
+    echo "  iTerm2 is running: two one-time clicks remain —"
+    echo "    Settings > Profiles > Dotfiles > Other Actions… > Set as Default"
+    echo "    Settings > Profiles > Colors > Color Presets… > Import… > $DOTFILES/iterm2/Ayu Mirage.itermcolors"
   else
     defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "$ITERM_PROFILE_GUID"
-    echo "  set Dotfiles as the default iTerm2 profile"
+    defaults write com.googlecode.iterm2 "Custom Color Presets" -dict-add "Ayu Mirage" "$(cat "$DOTFILES/iterm2/Ayu Mirage.itermcolors")"
+    echo "  set Dotfiles as the default iTerm2 profile; registered the Ayu Mirage color preset"
   fi
 fi
 
@@ -111,5 +115,5 @@ cat <<MSG
   - edit ~/.zshrc.local           private indexes, ssh aliases
   - edit ~/.gitconfig.local       work email override (optional)
   - gh auth login                 if this machine needs GitHub
-  - macOS: pick the "Dotfiles" iTerm2 profile as default if doctor.sh warned about it
+  - macOS: if doctor.sh warned, set the Dotfiles profile as default / import the color preset
 MSG

@@ -45,6 +45,7 @@ Not handled by the installer, by design: `~/.claude/settings.json` (has an API k
 | `vim/vimrc`, `vim/my_configs.vim` | `~/.vimrc`, `~/.vim_runtime/my_configs.vim` | glue for the cloned [amix/vimrc](https://github.com/amix/vimrc) runtime |
 | `bash/bash_profile` | `~/.bash_profile` (Linux) | hands a bash login shell to zsh; Coder resets the login shell on restart |
 | `iterm2/Dotfiles.json` | iTerm2 `DynamicProfiles/` (macOS) | colors, font, unlimited scrollback, mouse reporting, Option = Esc+ |
+| `iterm2/Ayu Mirage.itermcolors` | iTerm2 color preset (macOS) | the theme, as a re-importable preset; the profile above already has these colors baked in |
 | `iterm2/export-profile.py` | — | re-export a regular iTerm2 profile into `Dotfiles.json` |
 | `doctor.sh` | — | post-install checks; exit code = number of failures |
 
@@ -74,6 +75,7 @@ Two things a fresh Mac lacks, both handled by `install.sh`:
 
 - **Font.** powerlevel10k needs **MesloLGS NF**; without it the prompt renders as random characters.
 - **iTerm2 profile.** `iterm2/Dotfiles.json` is a dynamic profile symlinked into iTerm2, which loads it live.
+  Its colors are the Ayu Mirage theme; the preset is also registered so it stays selectable in Color Presets.
   Edits made in iTerm2 Settings are written back to the JSON, i.e. into the repo, so color tweaks are a commit away.
 
 ## Updating

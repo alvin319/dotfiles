@@ -45,6 +45,7 @@ if [[ $OS == Darwin ]]; then
   guid=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["Profiles"][0]["Guid"])' "$DOTFILES/iterm2/Dotfiles.json" 2>/dev/null)
   cur=$(defaults read com.googlecode.iterm2 "Default Bookmark Guid" 2>/dev/null)
   [ "$cur" = "$guid" ] && ok "iTerm2 default profile is Dotfiles" || warn "iTerm2 default profile is not Dotfiles — Settings > Profiles > Dotfiles > Other Actions… > Set as Default"
+  defaults read com.googlecode.iterm2 "Custom Color Presets" 2>/dev/null | grep -q '"Ayu Mirage"' && ok "iTerm2 color preset Ayu Mirage registered" || warn "Ayu Mirage preset not in iTerm2's list (colors still apply via the profile) — Colors > Color Presets… > Import… > iterm2/Ayu Mirage.itermcolors"
   font=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["Profiles"][0]["Normal Font"])' "$DOTFILES/iterm2/Dotfiles.json" 2>/dev/null)
   [[ $font == MesloLGS-NF* ]] && ok "iTerm2 profile font: $font" || warn "iTerm2 profile font is $font, p10k expects MesloLGS NF"
 else
