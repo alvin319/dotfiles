@@ -21,7 +21,8 @@ if [[ $OS == Darwin ]]; then
 else
   sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq
   sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
-    zsh zsh-autosuggestions zsh-syntax-highlighting ripgrep fd-find bat tree tmux git gh curl build-essential
+    zsh zsh-autosuggestions zsh-syntax-highlighting ripgrep fd-find bat tree tmux git curl build-essential
+  have gh || sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq gh   # skip if provided another way (e.g. nix)
   have nvidia-smi && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nvtop
   mkdir -p "$HOME/.local/bin"
   ln -sfn /usr/bin/batcat "$HOME/.local/bin/bat"   # Ubuntu renames these
