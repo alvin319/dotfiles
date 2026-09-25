@@ -4,7 +4,6 @@
 
 # Private package index (uv)
 # export UV_INDEX="name=https://oauth2accesstoken@REGION-python.pkg.dev/PROJECT/REPO/simple/"
-# export UV_KEYRING_PROVIDER="subprocess"
 
 # ssh shortcuts to remote boxes
 # alias remotecoder="ssh coder.my-box"
