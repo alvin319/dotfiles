@@ -80,6 +80,12 @@ _term_modes_reset() {
 alias fixterm='_term_modes_reset'
 ssh()   { command ssh   "$@"; local rc=$?; _term_modes_reset; return $rc }
 coder() { command coder "$@"; local rc=$?; _term_modes_reset; return $rc }
+# Also reset before every prompt, not just when ssh/coder return cleanly: a
+# laptop sleep/wake can drop the connection mid-session (broken pipe, no clean
+# exit), which the wrappers above never see. precmd runs before each prompt
+# draw regardless of how the previous command ended, so it catches that case.
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _term_modes_reset
 
 # ---- Prompt ------------------------------------------------------------------
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
